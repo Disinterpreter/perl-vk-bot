@@ -104,7 +104,9 @@ sub video_get_random {
     ];
     my $request = $ua->post( $url, $send);
     my $response = $request->decoded_content;
+    warn(Dumper($response));
     my $json = decode_json($response);
+    if (!defined $json->{'response'}->{'items'}->[0]) { video_get_random($_[0]) };
     my $link = 'video'.$json->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
     return $link;
 }
