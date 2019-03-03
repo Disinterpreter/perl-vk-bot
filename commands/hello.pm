@@ -41,16 +41,26 @@ sub boxes {
     #requests::sender::message_send($peer_id,'', $post);
 }
 
+my @videog = (
+    #-117257213, # too hot
+    -111096931,
+    -95254073,
+    -102087446,
+    -108338390
+);
 sub videos {
+    my $clid = splice(@videog, rand @videog, 1);
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
-    my $video = requests::sender::video_get_random(-30316056);
+    my $video = requests::sender::video_get_random($clid);
     requests::sender::message_send($peer_id,'', $video);
     #requests::sender::message_send($peer_id,'', $post);
 }
 
 commands::commandHandler::createCommand("коробочка", \&boxes);
 commands::commandHandler::createCommand("юмор", \&humor);
+commands::commandHandler::createCommand("мем", \&humor);
 commands::commandHandler::createCommand("вебм", \&videos);
+commands::commandHandler::createCommand("шебм", \&videos);
 commands::commandHandler::createCommand("видео", \&videos);
 commands::commandHandler::createCommand("привет", \&hello);
 
