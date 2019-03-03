@@ -97,16 +97,15 @@ sub video_get_random {
     my $offset = int(rand(9999));
     my $send = [
             'access_token' => $config->{'GLEB'},
-            'v' => '5.92',
+            'v' => '5.69',
             'count' => 1,
             'offset' => $offset,
             'owner_id' => $_[0],
     ];
     my $request = $ua->post( $url, $send);
     my $response = $request->decoded_content;
-    warn ($response);
     my $json = decode_json($response);
-    my $link = 'videos'.$json->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
+    my $link = 'video'.$json->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
     return $link;
 }
 1;
