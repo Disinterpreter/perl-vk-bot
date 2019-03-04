@@ -65,7 +65,9 @@ sub wall_get{
     ];
     my $request = $ua->post( $url, $send);
     my $response = $request->decoded_content;
+    warn(Dumper($response));
     my $json = decode_json($response);
+    if (!defined $json->{'response'}->{'items'}->[0]) { wall_get($_[0]) };
     my $link = 'wall'.$json->{'response'}->{'items'}->[0]->{'from_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
     return $link;
 }

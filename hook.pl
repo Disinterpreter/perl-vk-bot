@@ -11,6 +11,7 @@ use lib './requests';
 use commands::commandHandler;
 use commands::hello;
 use commands::ltools;
+use commands::games;
 use requests::sender;
 
 use Plack::Request;
