@@ -16,7 +16,7 @@ my $ua      = LWP::UserAgent->new();
 sub urban {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
     my $message = $_[0]->{'object'}->{'text'};
-    $message =~ s/\w+\s+\w+\s+//g;
+    $message =~ s/^\w+\s+\w+\s+//g;
     warn($message);
     $message =~ s/\s+/%20/g;
     my $url = 'https://api.urbandictionary.com/v0/define?term='.$message;

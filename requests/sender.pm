@@ -54,6 +54,7 @@ sub message_sticker_send {
 }
 
 sub wall_get{
+    my $clid = splice(@_, rand @_, 1);
     my $url = 'https://api.vk.com/method/wall.get';
     my $offset = int(rand(10000));
     my $send = [
@@ -61,14 +62,15 @@ sub wall_get{
             'v' => '5.92',
             'count' => 1,
             'offset' => $offset,
-            'owner_id' => $_[0]
+            'owner_id' => $clid
     ];
     my $request = $ua->post( $url, $send);
     my $response = $request->decoded_content;
     warn(Dumper($response));
     my $json = decode_json($response);
-    if (!defined $json->{'response'}->{'items'}->[0]) { wall_get($_[0]) };
-    my $link = 'wall'.$json->{'response'}->{'items'}->[0]->{'from_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
+    my $link;
+    if (!defined $json->{'response'}->{'items'}->[0]) { $link = wall_get(@_); return $link };
+    $link = 'wall'.$json->{'response'}->{'items'}->[0]->{'from_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
     return $link;
 }
 
@@ -95,6 +97,7 @@ sub photo_get_random {
 }
 
 sub video_get_random {
+    my $clid = splice(@_, rand @_, 1);
     my $url = 'https://api.vk.com/method/video.get';
     my $offset = int(rand(9999));
     my $send = [
@@ -102,14 +105,16 @@ sub video_get_random {
             'v' => '5.69',
             'count' => 1,
             'offset' => $offset,
-            'owner_id' => $_[0],
+            'owner_id' => $clid,
     ];
     my $request = $ua->post( $url, $send);
     my $response = $request->decoded_content;
     warn(Dumper($response));
     my $json = decode_json($response);
-    if (!defined $json->{'response'}->{'items'}->[0]) { video_get_random($_[0]) };
-    my $link = 'video'.$json->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
+    my $link;
+    warn ($offset);
+    if (!defined $json->{'response'}->{'items'}->[0]) { $link = video_get_random(@_); return $link };
+    $link = 'video'.$json->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
     return $link;
 }
 1;

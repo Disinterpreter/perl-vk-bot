@@ -31,9 +31,8 @@ my @groups = (
     -26406986
 );
 sub humor {
-    my $clid = splice(@groups, rand @groups, 1);
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
-    my $post = requests::sender::wall_get($clid);
+    my $post = requests::sender::wall_get(@groups);
     requests::sender::message_send($peer_id,'', $post);
     #warn(Dumper($jconf->{'response'}->{'items'}->[0]->{'id'}))
 
@@ -54,9 +53,8 @@ my @videog = (
     -108338390
 );
 sub videos {
-    my $clid = splice(@videog, rand @videog, 1);
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
-    my $video = requests::sender::video_get_random($clid);
+    my $video = requests::sender::video_get_random(@videog);
     requests::sender::message_send($peer_id,'', $video);
     #requests::sender::message_send($peer_id,'', $post);
 }
