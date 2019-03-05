@@ -71,8 +71,9 @@ sub wall_get{
     my $link;
 
     $wprotect = $wprotect + 1;
-    if ($wprotect >= 3) { return 'video-79153897_456239331' };
+    if ($wprotect >= 3) { $wprotect = 0; return 'video-79153897_456239331' };
     if (!defined $json->{'response'}->{'items'}->[0]) { $link = wall_get(@_); return $link };
+    $wprotect = 0;
     $link = 'wall'.$json->{'response'}->{'items'}->[0]->{'from_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
     return $link;
 }
@@ -117,8 +118,9 @@ sub video_get_random {
     my $json = decode_json($response);
     my $link;
     $vprotect = $vprotect + 1;
-    if ($vprotect >= 3) { return 'video-79153897_456239331' };
+    if ($vprotect >= 3) { $vprotect = 0; return 'video-79153897_456239331' };
     if (!defined $json->{'response'}->{'items'}->[0]) { $link = video_get_random(@_); return $link };
+    $vprotect = 0;
     $link = 'video'.$json->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
     return $link;
 }

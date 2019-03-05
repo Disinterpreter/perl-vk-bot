@@ -71,6 +71,7 @@ sub osu {
     my $message = $_[0]->{'object'}->{'text'};
     $message =~ s/^\w+\s+\w+\s+//g;
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    if ($message eq '' || !defined $message) { requests::sender::message_send($peer_id,"Юзай хельп"); };
     my $summary = 'https://osu.ppy.sh/api/get_user';
     my @modes = ();
     for my $i (0..3) {
@@ -99,5 +100,48 @@ sub osu {
     #warn(Dumper());
 
 }
+
+sub apex {
+    my $ua      = LWP::UserAgent->new();
+    my $message = $_[0]->{'object'}->{'text'};
+    $message =~ s/^\w+\s+\w+\s+//gu;
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+
+    #warn (Dumper($message));
+    if ($message eq '' || !defined $message) { requests::sender::message_send($peer_id,"Юзай хельп"); };
+    my @ns_headers = (
+    'User-Agent' => 'Mozilla/4.76 [en] (Win98; U)', 
+    'Accept' => 'image/gif, image/x-xbitmap, image/jpeg, image/pjpeg,image/png, */*',
+    'Accept-Charset' => 'iso-8859-1,*,utf-8', 
+    'Accept-Language' => 'en-US',
+    'TRN-Api-Key' => $config->{'APEX'} );
+    my $url = 'https://public-api.tracker.gg/apex/v1/standard/profile/5/'.$message;
+
+    my $request = $ua->get( $url, @ns_headers );
+    my $response = $request->decoded_content;
+    my $jstring = decode_json($response);
+    
+    
+    
+    my $username = $jstring->{'data'}->{'metadata'}->{'platformUserHandle'};
+    if (!defined $username) {requests::sender::message_send($peer_id,"Юзай хельп"); return;};
+    my $level = $jstring->{'data'}->{'metadata'}->{'level'};
+    my $kills = $jstring->{'data'}->{'stats'}->[1]->{'displayValue'};
+    my $damage = $jstring->{'data'}->{'stats'}->[2]->{'value'};
+    my $finishers = $jstring->{'data'}->{'stats'}->[3]->{'value'};
+
+    my $decorate = "Apex League данные пользователя: ". $username . "<br>".
+    #"Level/Kills/Damage/Finishers<br>".
+    #$level."/".$kills."/".$damage."/".$finishers;
+    "Level: ".$level."<br>".
+    "Kills: ".$kills."<br>".
+    "Damage: ".$damage."<br>".
+    "Finishers: ".$finishers."<br>";
+    requests::sender::message_send($peer_id,$decorate);
+    warn ($username."::::".$kills);
+}
+commands::commandHandler::createCommand("орех", \&apex);
+commands::commandHandler::createCommand("арех", \&apex);
+commands::commandHandler::createCommand("apex", \&apex);
 commands::commandHandler::createCommand("осу", \&osu);
 commands::commandHandler::createCommand("лига", \&league);
