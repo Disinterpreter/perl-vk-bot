@@ -127,12 +127,14 @@ sub apex {
     if (!defined $username) {requests::sender::message_send($peer_id,"Юзай хельп"); return;};
     my $level = $jstring->{'data'}->{'metadata'}->{'level'};
     my $kills = $jstring->{'data'}->{'stats'}->[1]->{'displayValue'};
-    my $damage = $jstring->{'data'}->{'stats'}->[2]->{'value'};
-    my $finishers = $jstring->{'data'}->{'stats'}->[3]->{'value'};
+    my $damage = $jstring->{'data'}->{'stats'}->[2]->{'value'} || "NONE";
+    my $finishers = $jstring->{'data'}->{'stats'}->[3]->{'value'} || "NONE";
+    my $legend = $jstring->{'data'}->{'children'}->[0]->{'metadata'}->{'legend_name'};
 
     my $decorate = "Apex League данные пользователя: ". $username . "<br>".
     #"Level/Kills/Damage/Finishers<br>".
     #$level."/".$kills."/".$damage."/".$finishers;
+    "Legend: ".$legend."<br>". 
     "Level: ".$level."<br>".
     "Kills: ".$kills."<br>".
     "Damage: ".$damage."<br>".
