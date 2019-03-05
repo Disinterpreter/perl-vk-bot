@@ -3,6 +3,8 @@ use commands::commandHandler;
 use FindBin;
 use lib "$FindBin::Bin";
 
+use strict;
+use warnings;
 use LWP;
 use LWP::UserAgent; 
 
@@ -11,6 +13,14 @@ use JSON;
 use requests::sender;
 use Data::Dumper;
 use utf8;
+
+sub version {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $version = `git rev-list HEAD | head -n 1`;
+    my $send = "Версия коммита: ". $version . "<br>".
+    "Детали:<br> https://github.com/Disinterpreter/perl-vk-bot/commit/".$version."";
+    requests::sender::message_send($peer_id,$send);
+}
 
 sub hello {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
@@ -66,5 +76,6 @@ commands::commandHandler::createCommand("вебм", \&videos);
 commands::commandHandler::createCommand("шебм", \&videos);
 commands::commandHandler::createCommand("видео", \&videos);
 commands::commandHandler::createCommand("привет", \&hello);
+commands::commandHandler::createCommand("версия", \&version);
 
 1;

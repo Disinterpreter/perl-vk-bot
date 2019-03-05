@@ -2,6 +2,8 @@ package commands::games;
 use commands::commandHandler;
 use FindBin;
 use lib "$FindBin::Bin";
+use strict;
+use warnings;
 
 use LWP;
 use LWP::UserAgent; 
@@ -64,4 +66,38 @@ sub league {
     }
 }
 
+sub osu {
+    my $ua      = LWP::UserAgent->new();
+    my $message = $_[0]->{'object'}->{'text'};
+    $message =~ s/^\w+\s+\w+\s+//g;
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $summary = 'https://osu.ppy.sh/api/get_user';
+    my @modes = ();
+    for my $i (0..3) {
+        my $tmp_send = [
+            'k' => $config->{'OSU'},
+            'm' => $i,
+            'u' => $message
+        ];
+        my $tmp_request = $ua->post( $summary, $tmp_send );
+        my $tmp_response = $tmp_request->decoded_content;
+        #warn(Dumper($tmp_send))
+        push @modes, decode_json($tmp_response);
+    }
+
+    my $username = $modes[0]->[0]->{'username'};
+    my $osu = $modes[0]->[0]->{'pp_raw'};
+    my $taiko = $modes[1]->[0]->{'pp_raw'};
+    my $ctb = $modes[2]->[0]->{'pp_raw'};
+    my $mania = $modes[3]->[0]->{'pp_raw'};
+     my $editprint = "Статистика игрока: ". $username."<br>".
+     "osu! " . int($osu)."pp<br>".
+     "Taiko ". int($taiko)."pp<br>".
+     "CtB ". int($ctb)."pp<br>".
+     "osu!mania ". int($mania)."pp<br>";
+    requests::sender::message_send($peer_id,$editprint);
+    #warn(Dumper());
+
+}
+commands::commandHandler::createCommand("осу", \&osu);
 commands::commandHandler::createCommand("лига", \&league);
