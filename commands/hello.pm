@@ -98,4 +98,5 @@ commands::commandHandler::createCommand("версия", \&version);
 commands::commandHandler::createCommand("фем", \&fem);
 commands::commandHandler::createCommand("хуемрази", \&fem);
 commands::commandHandler::createCommand("хуемразь", \&fem);
+commands::commandHandler::createCommand("хуе-мрази", \&fem);
 1;
