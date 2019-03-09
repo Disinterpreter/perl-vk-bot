@@ -48,6 +48,24 @@ sub humor {
 
 }
 
+my @fem = (
+    -154213818,
+    -110664178,
+    -105683933,
+    -113292858,
+    -167074015,
+    -108546632,
+    -144308229,
+    146030787
+);
+sub fem {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $post = requests::sender::wall_get(@fem);
+    requests::sender::message_send($peer_id,'', $post);
+    #warn(Dumper($jconf->{'response'}->{'items'}->[0]->{'id'}))
+
+}
+
 sub boxes {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
     my @photo = requests::sender::photo_get_random("478080307","259469122");
@@ -77,5 +95,7 @@ commands::commandHandler::createCommand("шебм", \&videos);
 commands::commandHandler::createCommand("видео", \&videos);
 commands::commandHandler::createCommand("привет", \&hello);
 commands::commandHandler::createCommand("версия", \&version);
-
+commands::commandHandler::createCommand("фем", \&fem);
+commands::commandHandler::createCommand("хуемрази", \&fem);
+commands::commandHandler::createCommand("хуемразь", \&fem);
 1;

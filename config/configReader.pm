@@ -11,6 +11,7 @@ sub loadConfig {
     my $config = {};
     while (my $row = <$handle>) {
         if ($row =~ m/^(\w+)=(.+)$/gm) {
+            $2 =~ s/\n//gm;
             $config->{$1} = $2;
         }
     }

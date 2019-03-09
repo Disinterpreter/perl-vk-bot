@@ -67,6 +67,7 @@ sub league {
 }
 
 sub osu {
+    warn(Dumper( $config));
     my $ua      = LWP::UserAgent->new();
     my $message = $_[0]->{'object'}->{'text'};
     $message =~ s/^\w+\s+\w+\s+//g;
@@ -82,7 +83,7 @@ sub osu {
         ];
         my $tmp_request = $ua->post( $summary, $tmp_send );
         my $tmp_response = $tmp_request->decoded_content;
-        #warn(Dumper($tmp_send))
+        warn(Dumper($tmp_response));
         push @modes, decode_json($tmp_response);
     }
 
@@ -145,5 +146,6 @@ sub apex {
 commands::commandHandler::createCommand("орех", \&apex);
 commands::commandHandler::createCommand("арех", \&apex);
 commands::commandHandler::createCommand("apex", \&apex);
-commands::commandHandler::createCommand("осу", \&osu);
+# Shit happens
+#commands::commandHandler::createCommand("осу", \&osu);
 commands::commandHandler::createCommand("лига", \&league);
