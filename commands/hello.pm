@@ -94,6 +94,7 @@ sub oks {
     my $url = 'https://gist.githubusercontent.com/continue98/5608a7740d96141df32fa79d01ab6750/raw/72ba3754073c0a1665851404c139af3862cd4888/oks.json';
     my $request = $ua->get( $url );
     my $response = $request->decoded_content;
+    $response =~ s/© OKStyle™//gm;
     my $coder = JSON::XS->new->ascii->pretty->allow_nonref;
     my $jstring = $coder->decode($response);
     my $quote = $jstring->{'Quotes'}->[int(rand(59))]->{'plain_text'};
