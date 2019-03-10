@@ -8,7 +8,7 @@ use warnings;
 use LWP;
 use LWP::UserAgent; 
 
-use JSON;
+use JSON::XS;
 
 use requests::sender;
 use Data::Dumper;
@@ -88,6 +88,34 @@ sub videos {
     #requests::sender::message_send($peer_id,'', $post);
 }
 
+sub oks {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $ua      = LWP::UserAgent->new();
+    my $url = 'https://gist.githubusercontent.com/continue98/5608a7740d96141df32fa79d01ab6750/raw/72ba3754073c0a1665851404c139af3862cd4888/oks.json';
+    my $request = $ua->get( $url );
+    my $response = $request->decoded_content;
+    my $coder = JSON::XS->new->ascii->pretty->allow_nonref;
+    my $jstring = $coder->decode($response);
+    my $quote = $jstring->{'Quotes'}->[int(rand(59))]->{'plain_text'};
+    requests::sender::message_send($peer_id,$quote);
+    #requests::sender::message_send($peer_id,'', $post);
+}
+
+sub advice {
+    
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $ua      = LWP::UserAgent->new();
+    my $url = 'http://fucking-great-advice.ru/api/random';
+    my $request = $ua->get( $url );
+    my $response = $request->decoded_content;
+    my $coder = JSON::XS->new->utf8->pretty->allow_nonref;
+    my $jstring = $coder->decode($response);
+    my $quote = $jstring->{'text'};
+    requests::sender::message_send($peer_id,$quote);
+}
+
+commands::commandHandler::createCommand("совет", \&advice);
+commands::commandHandler::createCommand("окс", \&oks);
 commands::commandHandler::createCommand("коробочка", \&boxes);
 commands::commandHandler::createCommand("юмор", \&humor);
 commands::commandHandler::createCommand("мем", \&humor);
