@@ -52,7 +52,7 @@ sub message_sticker_send {
     my $response = $request->as_string();
     #warn ($response);
 }
-my $wprotect = 0;
+
 sub wall_get{
     my $clid = splice(@_, rand @_, 1);
     my $url = 'https://api.vk.com/method/wall.get';
@@ -69,11 +69,25 @@ sub wall_get{
     warn(Dumper($response));
     my $json = decode_json($response);
     my $link;
-
-    $wprotect = $wprotect + 1;
-    if ($wprotect > 3) { $wprotect = 0; return 'video-79153897_456239331' };
-    if (!defined $json->{'response'}->{'items'}->[0]) { $link = wall_get(@_); return $link };
-    $wprotect = 0;
+    
+    if (!defined $json->{'response'}->{'items'}->[0]) { 
+            my $maxcount = $json->{'response'}->{'count'};
+            my $send2 = [
+            'access_token' => $config->{'GLEB'},
+            'v' => '5.92',
+            'count' => 1,
+            'offset' => int(rand($maxcount)),
+            'owner_id' => $clid
+            ];
+            warn (Dumper($maxcount));
+            warn (Dumper($send2));
+            my $secrequest = $ua->post( $url, $send2);
+            my $secresponse = $secrequest->decoded_content;
+            my $json2 = decode_json($secresponse);
+            warn (Dumper($json));
+            $link = 'wall'.$json2->{'response'}->{'items'}->[0]->{'from_id'}."_".$json2->{'response'}->{'items'}->[0]->{'id'};
+            return $link;
+    };
     $link = 'wall'.$json->{'response'}->{'items'}->[0]->{'from_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
     return $link;
 }
