@@ -58,7 +58,7 @@ sub humor {
     my $post = '';
     # Типа peer_id у нас определенная конфа с ценузрой
     # Поэтому мы туда впихаем скучные мемзы :)
-    if ($peer_id eq '2000000003') {
+    if ($peer_id eq '2000000003' || $peer_id eq '2000000006') {
         $post = requests::sender::wall_get(@boringmems);
     } else {
         $post = requests::sender::wall_get(@groups);
@@ -121,8 +121,10 @@ sub videos {
     # Типа peer_id у нас определенная конфа с ценузрой
     # Поэтому мы туда запретим доступ :)
     my $video = '';
-    if ($peer_id eq '2000000003') {
-        requests::sender::message_sticker_send($peer_id,6877);
+    if ($peer_id eq '2000000003' || $peer_id eq '2000000006') {
+        #requests::sender::message_sticker_send($peer_id,6877);
+        $video = requests::sender::video_get_random(['-26919587']);
+        requests::sender::message_send($peer_id,'', $video);
         return;
     } else {
         $video = requests::sender::video_get_random(@videog);
@@ -160,7 +162,31 @@ sub advice {
     requests::sender::message_send($peer_id,$quote);
 }
 
+sub krovostok {
+    my @kvaudio = (
+        'audio371745430_456296056',
+        'audio371745435_456296610',
+        'audio371745435_456296606',
+        'audio371745460_456296378',
+        'audio371745436_456296425',
+        'audio371745456_456296217',
+        'audio371745445_456570842',
+        'audio371745434_456571867',
+        'audio371745451_456569171'
 
+    );
+    my $audio = splice(@kvaudio, rand @kvaudio, 1);
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    # Наша цензура такое точно не пропустит
+    if ($peer_id ne '2000000003') {
+        my $peer_id = $_[0]->{'object'}->{'peer_id'};
+        requests::sender::message_send($peer_id,'', $audio);
+    } else {
+        requests::sender::message_sticker_send($peer_id,10379);
+    }
+}
+
+commands::commandHandler::createCommand("кровосток", \&krovostok);
 commands::commandHandler::createCommand("хв", \&hw);
 commands::commandHandler::createCommand("совет", \&advice);
 commands::commandHandler::createCommand("окс", \&oks);
