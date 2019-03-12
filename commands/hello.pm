@@ -38,15 +38,49 @@ my @groups = (
     -148583957,
     -139441547,
     -93082454,
-    -26406986
+    #-26406986,
+    -164517505
+);
+
+my @boringmems = (
+    -33414947,
+    -31976785,
+    -31480508,
+    -72378974,
+    -30602036,
+    -46448985,
+    -26419239,
+    -12382740,
+    -91050183
 );
 sub humor {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
-    my $post = requests::sender::wall_get(@groups);
+    my $post = '';
+    # Типа peer_id у нас определенная конфа с ценузрой
+    # Поэтому мы туда впихаем скучные мемзы :)
+    if ($peer_id eq '2000000003') {
+        $post = requests::sender::wall_get(@boringmems);
+    } else {
+        $post = requests::sender::wall_get(@groups);
+    };
     requests::sender::message_send($peer_id,'', $post);
     #warn(Dumper($jconf->{'response'}->{'items'}->[0]->{'id'}))
 
 }
+
+sub hw {
+    my @hw = (
+        -171298409,
+        -117665805,
+        -174790096,
+        -174056018,
+        -14317987,
+        -179183534
+    );
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $post = requests::sender::wall_get(@hw);
+    requests::sender::message_send($peer_id,'', $post);
+};
 
 my @fem = (
     -154213818,
@@ -83,8 +117,19 @@ my @videog = (
 );
 sub videos {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
-    my $video = requests::sender::video_get_random(@videog);
-    requests::sender::message_send($peer_id,'', $video);
+    my $post = '';
+    # Типа peer_id у нас определенная конфа с ценузрой
+    # Поэтому мы туда запретим доступ :)
+    my $video = '';
+    if ($peer_id eq '2000000003') {
+        requests::sender::message_sticker_send($peer_id,6877);
+        return;
+    } else {
+        $video = requests::sender::video_get_random(@videog);
+        requests::sender::message_send($peer_id,'', $video);
+    };
+    #my $video = requests::sender::video_get_random(@videog);
+    #requests::sender::message_send($peer_id,'', $video);
     #requests::sender::message_send($peer_id,'', $post);
 }
 
@@ -115,6 +160,8 @@ sub advice {
     requests::sender::message_send($peer_id,$quote);
 }
 
+
+commands::commandHandler::createCommand("хв", \&hw);
 commands::commandHandler::createCommand("совет", \&advice);
 commands::commandHandler::createCommand("окс", \&oks);
 commands::commandHandler::createCommand("коробочка", \&boxes);
