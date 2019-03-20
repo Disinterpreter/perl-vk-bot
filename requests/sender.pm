@@ -94,7 +94,7 @@ sub wall_get{
 
 sub photo_get_random {
     my $url = 'https://api.vk.com/method/photos.get';
-    my $offset = int(rand(221));
+    my $offset = int(rand(65535));
     my $send = [
             'access_token' => $config->{'GLEB'},
             'v' => '5.92',
@@ -106,11 +106,31 @@ sub photo_get_random {
     my $request = $ua->post( $url, $send);
     my $response = $request->decoded_content;
     my $json = decode_json($response);
-    my $link = 'photo'.$json->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
-    my $text = $json->{'response'}->{'items'}->[0]->{'text'};
+    my $link;
+    if (!defined $json->{'response'}->{'items'}->[0]) { 
+            my $maxcount = $json->{'response'}->{'count'};
+            my $send2 = [
+            'access_token' => $config->{'GLEB'},
+            'v' => '5.92',
+            'count' => 1,
+            'offset' => int(rand($maxcount)),
+            'owner_id' => $_[0],
+            'album_id' => $_[1]
+            ];
+            warn(Dumper($send2));
+            my $secrequest = $ua->post( $url, $send2);
+            my $secresponse = $secrequest->decoded_content;
+            my $json2 = decode_json($secresponse);
+            $link = 'photo'.$json2->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json2->{'response'}->{'items'}->[0]->{'id'};
+            my @photo = ();
+            push @photo, $link;
+            return @photo;
+    };
+    $link = 'photo'.$json->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
+    #my $text = $json->{'response'}->{'items'}->[0]->{'text'};
     my @photo = ();
     push @photo, $link;
-    push @photo, $text;
+    #push @photo, $text;
     return @photo;
 }
 

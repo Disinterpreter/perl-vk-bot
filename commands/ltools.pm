@@ -40,10 +40,14 @@ sub cleaner {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
     my $message = $_[0]->{'object'}->{'text'};
     $message =~ s/^\w+\s+\w+\s+//g;
+    if ($message =~ m/Dialogue: [^,]*,[^,]*,[^,]*,[^,]*,[^,]*,[^,]*,[^,]*,[^,]*,([^,]*),(.*)/gm) {
+        $message =~ s/Dialogue: [^,]*,[^,]*,[^,]*,[^,]*,[^,]*,[^,]*,[^,]*,[^,]*,([^,]*),(.*)/$2/gm;
+        $message =~ s/{.*}//gmu;
+        requests::sender::message_send($peer_id,$message);
+    } else {
+        requests::sender::message_send($peer_id,"юзай хелп");
+    }
 
-    $message =~ s/Dialogue: [^,]*,[^,]*,[^,]*,[^,]*,[^,]*,[^,]*,[^,]*,[^,]*,([^,]*),(.*)/$2/gm;
-    $message =~ s/{.*}//gmu;
-    requests::sender::message_send($peer_id,$message);
 
 }
 commands::commandHandler::createCommand("урбан", \&urban);

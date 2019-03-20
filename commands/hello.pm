@@ -7,12 +7,15 @@ use strict;
 use warnings;
 use LWP;
 use LWP::UserAgent; 
+use config::configReader;
 
 use JSON::XS;
 
 use requests::sender;
 use Data::Dumper;
 use utf8;
+
+my $config = config::configReader::loadConfig('.env');
 
 sub version {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
@@ -186,6 +189,25 @@ sub krovostok {
     }
 }
 
+
+sub elizabeth {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $message = $_[0]->{'object'}->{'text'};
+    my $fromid = $_[0]->{'object'}->{'from_id'};
+    $message =~ s/^\w+\s+\w+\s+//g;
+    if ($message =~ m/глину/g) {
+        if ($config->{'ELIZA'} eq $fromid || $config->{'OWNER'} eq $fromid) {
+            my @photo = requests::sender::photo_get_random("-179588896","263047835");
+            requests::sender::message_send($peer_id,$photo[1], $photo[0]);
+        } else {
+            requests::sender::message_sticker_send($peer_id,9986);
+        }
+        #requests::sender::message_send($peer_id,'', $post);
+    };
+
+}
+
+commands::commandHandler::createCommand("меси", \&elizabeth);
 commands::commandHandler::createCommand("кровосток", \&krovostok);
 commands::commandHandler::createCommand("хв", \&hw);
 commands::commandHandler::createCommand("совет", \&advice);
