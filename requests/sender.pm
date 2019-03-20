@@ -117,20 +117,25 @@ sub photo_get_random {
             'owner_id' => $_[0],
             'album_id' => $_[1]
             ];
-            warn(Dumper($send2));
             my $secrequest = $ua->post( $url, $send2);
             my $secresponse = $secrequest->decoded_content;
             my $json2 = decode_json($secresponse);
             $link = 'photo'.$json2->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json2->{'response'}->{'items'}->[0]->{'id'};
+            my $text = $json2->{'response'}->{'items'}->[0]->{'text'};
+            warn (Dumper($text));
+            if ($text eq '') { $text = "<3" };
             my @photo = ();
             push @photo, $link;
+            push @photo, $text;
             return @photo;
     };
     $link = 'photo'.$json->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
-    #my $text = $json->{'response'}->{'items'}->[0]->{'text'};
+    
+    my $text = $json->{'response'}->{'items'}->[0]->{'text'};
+    if ($text eq '') { $text = "<3" };
     my @photo = ();
     push @photo, $link;
-    #push @photo, $text;
+    push @photo, $text;
     return @photo;
 }
 
