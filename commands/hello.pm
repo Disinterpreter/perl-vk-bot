@@ -196,12 +196,12 @@ sub elizabeth {
     my $fromid = $_[0]->{'object'}->{'from_id'};
     $message =~ s/^\w+\s+\w+\s+//g;
     if ($message =~ m/глину/g) {
-        if ($config->{'ELIZA'} eq $fromid || $config->{'OWNER'} eq $fromid) {
+        #if ($config->{'ELIZA'} eq $fromid || $config->{'OWNER'} eq $fromid) {
             my @photo = requests::sender::photo_get_random("-179588896","263047835");
             requests::sender::message_send($peer_id,$photo[1], $photo[0]);
-        } else {
-            requests::sender::message_sticker_send($peer_id,9986);
-        }
+        #} else {
+        #    requests::sender::message_sticker_send($peer_id,9986);
+        #}
         #requests::sender::message_send($peer_id,'', $post);
     };
 

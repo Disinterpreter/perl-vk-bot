@@ -11,11 +11,12 @@ sub loadConfig {
     my $config = {};
     while (my $row = <$handle>) {
         if ($row =~ m/^(\w+)=(.+)$/gm) {
-            $2 =~ s/\n//gm;
-            $config->{$1} = $2;
+            my $key = $1;
+            my $param = $2;
+            $param =~ s/\s+//g;
+            $config->{$key} = $param;
         }
     }
-
     return $config;
 }
 
