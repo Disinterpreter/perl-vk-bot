@@ -207,6 +207,12 @@ sub elizabeth {
 
 }
 
+sub hime {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    requests::sender::message_send($peer_id,'', 'video475072121_456239025');
+}
+
+commands::commandHandler::createCommand("химе", \&hime);
 commands::commandHandler::createCommand("меси", \&elizabeth);
 commands::commandHandler::createCommand("кровосток", \&krovostok);
 commands::commandHandler::createCommand("хв", \&hw);
