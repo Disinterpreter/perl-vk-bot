@@ -115,6 +115,17 @@ sub varlamov {
 
 }
 
+my @humoresk = (
+    -92876084
+);
+sub humoresk {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $post = requests::sender::wall_get(@humoresk);
+    requests::sender::message_send($peer_id,'', $post);
+    #warn(Dumper($jconf->{'response'}->{'items'}->[0]->{'id'}))
+
+}
+
 sub boxes {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
     my @photo = requests::sender::photo_get_random("478080307","259469122");
@@ -248,4 +259,5 @@ commands::commandHandler::createCommand("хуемразь", \&fem);
 commands::commandHandler::createCommand("хуе-мрази", \&fem);
 commands::commandHandler::createCommand("биография", \&bio);
 commands::commandHandler::createCommand("многоэтажка", \&varlamov);
+commands::commandHandler::createCommand("юмореск", \&humoresk);
 1;
