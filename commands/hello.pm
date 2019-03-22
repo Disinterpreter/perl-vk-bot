@@ -105,13 +105,11 @@ sub fem {
 }
 
 my @varlamov = (
-    -178831229,
-    -178831229,
     -178831229
 );
 sub varlamov {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
-    my $post = requests::sender::wall_get(@fem);
+    my $post = requests::sender::wall_get(@varlamov);
     requests::sender::message_send($peer_id,'', $post);
     #warn(Dumper($jconf->{'response'}->{'items'}->[0]->{'id'}))
 
