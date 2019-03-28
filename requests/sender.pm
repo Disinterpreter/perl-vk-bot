@@ -2,6 +2,7 @@ package requests::sender;
 
 use LWP;
 use LWP::UserAgent; 
+use LWP::Simple qw(getstore);
 
 use lib '../';
 use config::configReader;
@@ -9,6 +10,7 @@ use warnings;
 use strict;
 use JSON;
 use Data::Dumper;
+use utf8;
 
 my $config = config::configReader::loadConfig('.env');
 
@@ -162,5 +164,65 @@ sub video_get_random {
     $vprotect = 0;
     $link = 'video'.$json->{'response'}->{'items'}->[0]->{'owner_id'}."_".$json->{'response'}->{'items'}->[0]->{'id'};
     return $link;
+}
+
+sub upload_doc {
+        my $link = shift;
+        my $name = shift;
+        my $peer_id = shift;
+        my $response = $ua->get($link);
+        my $filename = $link;
+        $filename =~ m/.*\/(.*)$/;
+        $filename = $1;
+        die $response->status_line if !$response->is_success;
+        my $file = $response->decoded_content( charset => 'none' );
+        my $save = "/tmp/$filename";
+        getstore($link,$save);
+        my $uploadurl = getMessagesUploadServer($peer_id);
+        my $req = $ua->post($uploadurl,
+                Content_Type => 'form-data',
+                Content => [
+                'file' => [ $save ],
+                ],
+        );
+        my $vkfileinfo = $req->decoded_content;
+        my $json = decode_json($vkfileinfo);
+        #warn(Dumper($json));
+        my $saved = docs_save($json->{'file'}, $filename);
+        my $doc = 'doc'.$saved->{'response'}->[0]->{'owner_id'}.'_'.$saved->{'response'}->[0]->{'id'};
+        message_send($peer_id, $name, $doc);
+        warn(Dumper($saved));
+}
+
+sub getMessagesUploadServer{
+        my $peer_id = shift;
+        my $url = 'https://api.vk.com/method/docs.getMessagesUploadServer';
+        my $send = [
+                'access_token' => $config->{'VKTOKEN'},
+                'v' => '5.69',
+                'peer_id' => $peer_id
+        ];
+        my $request = $ua->post( $url, $send);
+        my $response = $request->decoded_content;
+        my $json = decode_json($response);
+        return $json->{'response'}->{'upload_url'}
+}
+
+sub docs_save {
+        my $file = shift;
+        my $name = shift;
+        my $tag = "anime";
+        my $url = 'https://api.vk.com/method/docs.save';
+        my $send = [
+                'access_token' => $config->{'VKTOKEN'},
+                'v' => '5.69',
+                'file' => $file,
+                'name' => $name,
+                'tags' => $tag
+        ];
+        my $request = $ua->post( $url, $send);
+        my $response = $request->decoded_content;
+        my $json = decode_json($response);
+        return $json;
 }
 1;

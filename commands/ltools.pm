@@ -10,6 +10,9 @@ use utf8;
 use LWP;
 use LWP::UserAgent; 
 
+use XML::Feed;
+use URI::Encode qw(uri_encode uri_decode);
+
 
 my $ua      = LWP::UserAgent->new();
 
@@ -50,6 +53,34 @@ sub cleaner {
 
 
 }
+
+sub nyaa {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $message = $_[0]->{'object'}->{'text'};
+    $message =~ s/^\w+\s+\w+\s+//g;
+
+    my $formatted = uri_encode($message);
+    $ua->timeout( 3 );
+    my $feed = XML::Feed->parse(URI->new('https://nyaa1.unblocked.lol/?page=rss&c=1_2&f=0&q='.$formatted))
+    or requests::sender::message_send($peer_id, XML::Feed->errstr);
+    if (!defined $feed) {
+     return [
+             '200',
+             [ 'Content-Type' => 'text/html' ],
+             [ "ok" ],
+        ];        
+     };
+    # my $title = $feed->item->title;
+    # my $link = $feed->item->link;
+    if ( scalar($feed->entries) == 0) { requests::sender::message_send($peer_id, "Я ничего не нашел"); };
+    for my $entry ($feed->entries) {
+        requests::sender::upload_doc($entry->{'entry'}->{'link'}, $entry->{'entry'}->{'title'}, $peer_id);
+        last;
+    }
+    
+}
+
+commands::commandHandler::createCommand("няшка", \&nyaa);
 commands::commandHandler::createCommand("урбан", \&urban);
 commands::commandHandler::createCommand("чисти", \&cleaner);
 1;
