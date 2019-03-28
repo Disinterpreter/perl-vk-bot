@@ -190,8 +190,10 @@ sub upload_doc {
         #warn(Dumper($json));
         my $saved = docs_save($json->{'file'}, $filename);
         my $doc = 'doc'.$saved->{'response'}->[0]->{'owner_id'}.'_'.$saved->{'response'}->[0]->{'id'};
-        message_send($peer_id, $name, $doc);
+        #message_send($peer_id, $name, ;
         warn(Dumper($saved));
+        unlink($save);
+        return $doc;
 }
 
 sub getMessagesUploadServer{

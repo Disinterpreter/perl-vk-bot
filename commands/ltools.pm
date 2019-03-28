@@ -73,10 +73,15 @@ sub nyaa {
     # my $title = $feed->item->title;
     # my $link = $feed->item->link;
     if ( scalar($feed->entries) == 0) { requests::sender::message_send($peer_id, "Я ничего не нашел"); };
+    my $doc = '';
+    my $title = '';
     for my $entry ($feed->entries) {
-        requests::sender::upload_doc($entry->{'entry'}->{'link'}, $entry->{'entry'}->{'title'}, $peer_id);
+        warn("count");
+        $title = $entry->{'entry'}->{'title'};
+        $doc = requests::sender::upload_doc($entry->{'entry'}->{'link'}, $entry->{'entry'}->{'title'}, $peer_id);      
         last;
     }
+    requests::sender::message_send($peer_id,$title,$doc);
     
 }
 
