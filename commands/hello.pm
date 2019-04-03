@@ -216,7 +216,7 @@ my @twit = (
 	-140336241
 );
 sub twit {
-	my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
     my $post = requests::sender::wall_get(@twit);
     requests::sender::message_send($peer_id,'', $post);
 }
