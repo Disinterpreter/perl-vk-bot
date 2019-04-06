@@ -238,6 +238,11 @@ sub twit {
     requests::sender::message_send($peer_id,'', $post);
 }
 
+sub avx {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    requests::sender::message_send($peer_id,'', 'video218534351_456239232');
+}
+
 commands::commandHandler::createCommand("химе", \&hime);
 commands::commandHandler::createCommand("меси", \&elizabeth);
 commands::commandHandler::createCommand("кровосток", \&krovostok);
@@ -256,10 +261,8 @@ commands::commandHandler::createCommand("фем", \&fem);
 commands::commandHandler::createCommand("хуемрази", \&fem);
 commands::commandHandler::createCommand("хуемразь", \&fem);
 commands::commandHandler::createCommand("хуе-мрази", \&fem);
-
 commands::commandHandler::createCommand("биография", \&bio);
 commands::commandHandler::createCommand("многоэтажка", \&varlamov);
-
 commands::commandHandler::createCommand("твит", \&twit);
-
+commands::commandHandler::createCommand("avx", \&twit);
 1;
