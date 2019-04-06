@@ -212,6 +212,15 @@ sub hime {
     requests::sender::message_send($peer_id,'', 'video475072121_456239025');
 }
 
+my @twit = (
+	-140336241
+);
+sub twit {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $post = requests::sender::wall_get(@twit);
+    requests::sender::message_send($peer_id,'', $post);
+}
+
 commands::commandHandler::createCommand("химе", \&hime);
 commands::commandHandler::createCommand("меси", \&elizabeth);
 commands::commandHandler::createCommand("кровосток", \&krovostok);
@@ -230,4 +239,5 @@ commands::commandHandler::createCommand("фем", \&fem);
 commands::commandHandler::createCommand("хуемрази", \&fem);
 commands::commandHandler::createCommand("хуемразь", \&fem);
 commands::commandHandler::createCommand("хуе-мрази", \&fem);
+commands::commandHandler::createCommand("твит", \&twit);
 1;
