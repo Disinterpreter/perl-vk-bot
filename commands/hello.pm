@@ -264,5 +264,5 @@ commands::commandHandler::createCommand("хуе-мрази", \&fem);
 commands::commandHandler::createCommand("биография", \&bio);
 commands::commandHandler::createCommand("многоэтажка", \&varlamov);
 commands::commandHandler::createCommand("твит", \&twit);
-commands::commandHandler::createCommand("avx", \&twit);
+commands::commandHandler::createCommand("avx", \&avx);
 1;
