@@ -115,6 +115,25 @@ sub varlamov {
 
 }
 
+my @tyan = (
+    -79458616,
+    -132807795,
+    -121581173,
+    -54709527,
+    -130914885,
+    -111044288,
+    -102853758,
+    -134982584
+    
+);
+sub tyan {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $post = requests::sender::wall_get(@tyan);
+    requests::sender::message_send($peer_id,'', $post);
+    #warn(Dumper($jconf->{'response'}->{'items'}->[0]->{'id'}))
+
+}
+
 sub boxes {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
     my @photo = requests::sender::photo_get_random("478080307","259469122");
@@ -265,4 +284,5 @@ commands::commandHandler::createCommand("биография", \&bio);
 commands::commandHandler::createCommand("многоэтажка", \&varlamov);
 commands::commandHandler::createCommand("твит", \&twit);
 commands::commandHandler::createCommand("avx", \&avx);
+commands::commandHandler::createCommand("тяночку", \&tyan);
 1;
