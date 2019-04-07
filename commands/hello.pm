@@ -262,6 +262,14 @@ sub avx {
     requests::sender::message_send($peer_id,'', 'video218534351_456239232');
 }
 
+sub shpak {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    requests::sender::message_send($peer_id,"Кидаешь?");
+    requests::sender::message_send($peer_id,'', 'video342736485_456239337');
+    requests::sender::message_send($peer_id,'', 'video342736485_456239288');
+}
+
+
 commands::commandHandler::createCommand("химе", \&hime);
 commands::commandHandler::createCommand("меси", \&elizabeth);
 commands::commandHandler::createCommand("кровосток", \&krovostok);
@@ -285,4 +293,5 @@ commands::commandHandler::createCommand("многоэтажка", \&varlamov);
 commands::commandHandler::createCommand("твит", \&twit);
 commands::commandHandler::createCommand("avx", \&avx);
 commands::commandHandler::createCommand("тяночку", \&tyan);
+commands::commandHandler::createCommand("шпак", \&shpak);
 1;
