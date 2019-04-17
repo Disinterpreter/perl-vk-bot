@@ -31,7 +31,7 @@ my $app = sub {
           my $peer = $jstring->{'object'}->{'peer_id'};
 
           my @args = split ( " ", $message);
-          if ($args[0] =~ m/(ко(с|)тян|rjcnzy)(,|)/gmui) {
+          if ($args[0] =~ m/(ко(с|)тян|rj(c|)nzy)(,|)/gmui) {
             my $determinator = $args[1];
             commands::commandHandler::execCommand($jstring, $determinator);
           } else {
