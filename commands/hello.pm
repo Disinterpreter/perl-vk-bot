@@ -205,7 +205,8 @@ sub krovostok {
         'audio371745456_456296217',
         'audio371745445_456570842',
         'audio371745434_456571867',
-        'audio371745451_456569171'
+        'audio371745451_456569171',
+	'audio61580061_456239547'
 
     );
     my $audio = splice(@kvaudio, rand @kvaudio, 1);
