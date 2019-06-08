@@ -273,6 +273,39 @@ sub horoscope {
     requests::sender::message_send($peer_id,'', $post);
 };
 
+sub eightball {
+    my @eanswers = (
+        'Бесспорно',
+        'Предрешено',
+        'Никаких сомнений',
+        'Определённо да',
+        'Можешь быть уверен в этом',
+        'Мне кажется — «да»',
+        'Вероятнее всего',
+        'Хорошие перспективы',
+        'Знаки говорят — «да»',
+        'Да',
+
+        'Пока не ясно, попробуй снова',
+        'Спроси позже',
+        'Лучше не рассказывать',
+        'Сейчас нельзя предсказать',
+        'Сконцентрируйся и спроси опять',
+
+        'Даже не думай',
+        'Мой ответ — «нет»',
+        'По моим данным — «нет»',
+        'Перспективы не очень хорошие',
+        'Весьма сомнительно'      
+    );
+
+    my $decidion = int(rand(scalar(@eanswers)));
+
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    requests::sender::message_send($peer_id, $eanswers[$decidion]);
+};
+
+commands::commandHandler::createCommand("шар", \&eightball);
 commands::commandHandler::createCommand("гороскоп", \&horoscope);
 commands::commandHandler::createCommand("химе", \&hime);
 commands::commandHandler::createCommand("меси", \&elizabeth);
