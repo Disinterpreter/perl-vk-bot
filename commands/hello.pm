@@ -306,6 +306,7 @@ sub eightball {
 };
 
 commands::commandHandler::createCommand("шар", \&eightball);
+commands::commandHandler::createCommand("шар,", \&eightball);
 commands::commandHandler::createCommand("гороскоп", \&horoscope);
 commands::commandHandler::createCommand("химе", \&hime);
 commands::commandHandler::createCommand("меси", \&elizabeth);
