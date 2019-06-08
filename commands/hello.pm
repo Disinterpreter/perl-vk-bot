@@ -263,6 +263,17 @@ sub avx {
     requests::sender::message_send($peer_id,'', 'video218534351_456239232');
 }
 
+sub horoscope {
+    my @horoscope = (
+        -170116567,
+        -176101512
+    );
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $post = requests::sender::wall_get(@horoscope);
+    requests::sender::message_send($peer_id,'', $post);
+};
+
+commands::commandHandler::createCommand("гороскоп", \&horoscope);
 commands::commandHandler::createCommand("химе", \&hime);
 commands::commandHandler::createCommand("меси", \&elizabeth);
 commands::commandHandler::createCommand("кровосток", \&krovostok);

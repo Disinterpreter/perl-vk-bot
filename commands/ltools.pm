@@ -60,7 +60,7 @@ sub nyaa {
     $message =~ s/^\w+\s+\w+\s+//g;
 
     my $formatted = uri_encode($message);
-    $ua->timeout( 3 );
+    $ua->timeout( 10 );
     my $feed = XML::Feed->parse(URI->new('https://nyaa1.unblocked.lol/?page=rss&c=1_2&f=0&q='.$formatted))
     or requests::sender::message_send($peer_id, XML::Feed->errstr);
     if (!defined $feed) {
@@ -78,6 +78,9 @@ sub nyaa {
     for my $entry ($feed->entries) {
         warn("count");
         $title = $entry->{'entry'}->{'title'};
+        my $linkoftitle = $entry->{'entry'}->{'link'};
+        $linkoftitle =~ s/nyaa\.si/nyaa1\.unblocked\.lol/g;
+        warn ($linkoftitle);
         $doc = requests::sender::upload_doc($entry->{'entry'}->{'link'}, $entry->{'entry'}->{'title'}, $peer_id);      
         last;
     }
