@@ -305,6 +305,10 @@ sub eightball {
     requests::sender::message_send($peer_id, $eanswers[$decidion]);
 };
 
+sub nax {
+    requests::sender::message_send($peer_id, https://pp.userapi.com/c850324/v850324505/165939/kkHedwJVnzM.jpg);
+}
+
 commands::commandHandler::createCommand("шар", \&eightball);
 commands::commandHandler::createCommand("шар,", \&eightball);
 commands::commandHandler::createCommand("гороскоп", \&horoscope);
@@ -331,4 +335,5 @@ commands::commandHandler::createCommand("многоэтажка", \&varlamov);
 commands::commandHandler::createCommand("твит", \&twit);
 commands::commandHandler::createCommand("avx", \&avx);
 commands::commandHandler::createCommand("тяночку", \&tyan);
+commands::commandHandler::createCommand("нахуй оно мне надо", \&nax);
 1;
