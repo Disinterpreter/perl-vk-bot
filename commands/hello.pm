@@ -306,7 +306,7 @@ sub eightball {
 };
 
 sub nax {
-    requests::sender::message_send($peer_id, https://pp.userapi.com/c850324/v850324505/165939/kkHedwJVnzM.jpg);
+    requests::sender::message_send($peer_id, 'https://pp.userapi.com/c850324/v850324505/165939/kkHedwJVnzM.jpg');
 }
 
 commands::commandHandler::createCommand("шар", \&eightball);
