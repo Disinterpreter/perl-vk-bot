@@ -306,6 +306,7 @@ sub eightball {
 };
 
 sub nax {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
     requests::sender::message_send($peer_id, 'https://pp.userapi.com/c850324/v850324505/165939/kkHedwJVnzM.jpg');
 }
 
