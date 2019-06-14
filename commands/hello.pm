@@ -321,7 +321,35 @@ sub krober {
     }
 }
 
-commands::commandHandler::createCommand("шар", \&eightball);
+sub doing {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $message = $_[0]->{'object'}->{'text'};
+    $message =~ s/^\w+\s+\w+\s+//g;
+    warn($message);
+
+    my $cinfo = requests::sender::getConversationMembers($peer_id);
+    my $profilesCount = $cinfo->{'response'}->{'count'};
+    my $profilesArray = $cinfo->{'response'}->{'profiles'};
+    my $profil = rand(int($profilesCount));
+    my $randlastname = $profilesArray->[$profil]->{'last_name'} || $profilesArray->[0]->{'last_name'};
+    my $randfirsttname = $profilesArray->[$profil]->{'first_name'} || $profilesArray->[0]->{'first_name'};
+    my $na = $randfirsttname . " " . $randlastname;
+
+    my $profil2 = rand(int($profilesCount));
+    my $randlastname2 = $profilesArray->[$profil2]->{'last_name'} || $profilesArray->[0]->{'last_name'};
+    my $randfirsttname2 = $profilesArray->[$profil2]->{'first_name'} || $profilesArray->[0]->{'first_name'};
+    my $na2 = $randfirsttname2 . " " . $randlastname2;
+
+    #my $tetmsg = $message
+    $message =~ s/^https?:\/\/(?:www\.)?([^\/.]+)\.([^\/.]+).*//i;
+    my $count100 = int(rand(100));
+    $message =~ s/(%u\b)/$na/g;
+    $message =~ s/(%u2)/$na2/g;
+    $message =~ s/(%d)/$count100/g;
+    requests::sender::message_send($peer_id, "Ответ: " . $message);
+}
+
+commands::commandHandler::createCommand("действие", \&doing);
 commands::commandHandler::createCommand("шар,", \&eightball);
 commands::commandHandler::createCommand("гороскоп", \&horoscope);
 commands::commandHandler::createCommand("химе", \&hime);

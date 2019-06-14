@@ -41,6 +41,21 @@ sub message_send {
     my $response = $request->as_string();
     #warn ($response);
 }
+
+sub getConversationMembers {
+    print("wwowowowowow\n");
+    my $url = 'https://api.vk.com/method/messages.getConversationMembers';
+    my $send = [
+            'access_token' => $config->{'VKTOKEN'},
+            'v' => '5.92',
+            'peer_id' => $_[0]
+    ];
+    my $request = $ua->post( $url, $send);
+    my $response = $request->decoded_content;
+    my $json = decode_json($response);
+    return $json;
+}
+
 sub message_sticker_send {
     my $url = 'https://api.vk.com/method/messages.send';
     my $send = [
