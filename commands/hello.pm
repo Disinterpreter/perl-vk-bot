@@ -305,9 +305,20 @@ sub eightball {
     requests::sender::message_send($peer_id, $eanswers[$decidion]);
 };
 
-sub nax {
+sub krober {
+    my $ua       = LWP::UserAgent->new();
+
+    my $response = $ua->get( 'https://krober.biz/?p=2441' );
+    my $content  = $response->decoded_content();
+
+
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
-    requests::sender::message_send($peer_id, 'https://pp.userapi.com/c850324/v850324505/165939/kkHedwJVnzM.jpg');
+
+    if ($content =~ m/.+<\/a>\s+(.+)\s+\s+\s+<\/div><!-- #site-info -->/gm) {
+        requests::sender::message_send($peer_id, $1);
+    } else {
+        requests::sender::message_send($peer_id, 'кроба упал');
+    }
 }
 
 commands::commandHandler::createCommand("шар", \&eightball);
@@ -336,5 +347,5 @@ commands::commandHandler::createCommand("многоэтажка", \&varlamov);
 commands::commandHandler::createCommand("твит", \&twit);
 commands::commandHandler::createCommand("avx", \&avx);
 commands::commandHandler::createCommand("тяночку", \&tyan);
-commands::commandHandler::createCommand("нахуй оно мне надо", \&nax);
+commands::commandHandler::createCommand("кроба", \&krober);
 1;
