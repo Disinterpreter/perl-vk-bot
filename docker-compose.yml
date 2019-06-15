@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+    nginx:
+        image: nginx:latest
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./hosts:/etc/nginx/sites-enabled
+            - ./logs:/var/log/nginx
+        links:
+            - kostyan
+    kostyan:
+        image: kostyan:latest
+        hostname: kostyan-api
