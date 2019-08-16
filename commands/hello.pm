@@ -14,6 +14,7 @@ use JSON::XS;
 use requests::sender;
 use Data::Dumper;
 use utf8;
+use feature "switch";
 
 my $config = config::configReader::loadConfig('.env');
 
@@ -349,7 +350,74 @@ sub doing {
     requests::sender::message_send($peer_id, "Ответ: " . $message);
 }
 
+sub crypto {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $message = $_[0]->{'object'}->{'text'};
+    $message =~ s/^\w+\s+\w+\s+//g;
+    # Тут нам помешал CloudFlare, но почему-то через curl пустил
+    # небохато жили неча и начинать
+    my $currency = `curl -s --location --request GET "api.coincap.io/v2/assets?limit=20"`;
+    # my $ua      = LWP::UserAgent->new();
+    # my $url = 'https://api.coincap.io/v2/assets?limit=20';
+    # my $request = $ua->get( $url );
+    # my $response = $request->decoded_content;
+    #print(Dumper($response));
+    my $cryptocurrensy = JSON::XS->new->ascii->pretty->allow_nonref;
+    my $jstring = $cryptocurrensy->decode($currency);
+    
+    #warn ($message);
+    if (length($message) == 13 || length($message) == 11) {
+        my $carray = $jstring->{'data'};
+        my @costarr = ();
+        foreach my $cr (@$carray) {
+            #warn($cr->{'id'}." ".$cr->{'priceUsd'});
+            my $cnp = $cr->{'id'}." ".$cr->{'priceUsd'};
+            push @costarr, $cnp;
+        }
+        my $total = join("<br>",@costarr);
+        
+        requests::sender::message_send($peer_id, "Курс всех популярных валют:<br>".$total."\n");
+    }
+    for($message) {
+        when ("биток") {
+            requests::sender::message_send($peer_id, "Биток сейчас стоит \$".$jstring->{'data'}->[0]->{priceUsd}."\n");
+        }
+        when ("эфир") {
+            requests::sender::message_send($peer_id, "Биток сейчас стоит \$".$jstring->{'data'}->[1]->{priceUsd}."\n");
+        }
+    };
+    # switch($message) {
+    #     case "биток" {
+    #         print(Dumper($response->{'data'}->[0]->{priceUsd}));
+    #     }
+    # }
+    
+}
+
+sub weather{
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $message = $_[0]->{'object'}->{'text'};
+    $message =~ s/^\w+\s+\w+\s+//g;
+    my $ua      = LWP::UserAgent->new();
+    my $url = "https://api.openweathermap.org/data/2.5/weather?q=".$message.",ru&units=metric&appid=".$config->{'WEATHER'} ;
+    my $request = $ua->get( $url );
+    my $weather = $request->decoded_content;
+
+    my $initjson = JSON::XS->new->ascii->pretty->allow_nonref;
+    my $jstring = $initjson->decode($weather);
+    if ($jstring->{'cod'} eq '200') {
+        requests::sender::message_send($peer_id, "Погода в ".$message." сейчас:<br>".$jstring->{'main'}->{'temp'}."\n"); 
+    } else {
+        requests::sender::message_send($peer_id, "Неправильно указан город.\n"); 
+    }
+    
+};
+
+commands::commandHandler::createCommand("погода", \&weather);
+commands::commandHandler::createCommand("курс", \&crypto);
+commands::commandHandler::createCommand("крипта", \&crypto);
 commands::commandHandler::createCommand("действие", \&doing);
+commands::commandHandler::createCommand("шар", \&eightball);
 commands::commandHandler::createCommand("шар,", \&eightball);
 commands::commandHandler::createCommand("гороскоп", \&horoscope);
 commands::commandHandler::createCommand("химе", \&hime);
