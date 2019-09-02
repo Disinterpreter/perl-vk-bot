@@ -371,7 +371,7 @@ sub crypto {
         my @costarr = ();
         foreach my $cr (@$carray) {
             #warn($cr->{'id'}." ".$cr->{'priceUsd'});
-            my $cnp = $cr->{'id'}." ".$cr->{'priceUsd'};
+            my $cnp = $cr->{'symbol'}." ".$cr->{'priceUsd'};
             push @costarr, $cnp;
         }
         my $total = join("<br>",@costarr);

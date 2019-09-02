@@ -9,18 +9,19 @@ use JSON;
 use utf8;
 use LWP;
 use LWP::UserAgent; 
+use HTML::TreeBuilder::XPath qw();
 
 use XML::Feed;
 use URI::Encode qw(uri_encode uri_decode);
 
 
 my $ua      = LWP::UserAgent->new();
+my $t = HTML::TreeBuilder::XPath->new;
 
 sub urban {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
     my $message = $_[0]->{'object'}->{'text'};
     $message =~ s/^\w+\s+\w+\s+//g;
-    warn($message);
     $message =~ s/\s+/%20/g;
     my $url = 'https://api.urbandictionary.com/v0/define?term='.$message;
     my $request = $ua->get( $url );
@@ -87,6 +88,56 @@ sub nyaa {
     requests::sender::message_send($peer_id,$title,$doc);
     
 }
+
+sub multitran {
+    #my $response = $ua->get( 'https://www.multitran.com/m.exe?s=shovel&l1=1&l2=
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $message = $_[0]->{'object'}->{'text'};
+    $message =~ s/^\w+\s+\w+\s+//g;
+
+    my $response;
+    if ($message =~ m/[А-я \-_]+/gmu) {
+        $response = $ua->get( 'https://www.multitran.com/m.exe?s='.$message.'&l1=1&l2=2');
+    } else {
+        $response = $ua->get( 'https://www.multitran.com/m.exe?s='.$message.'&l1=2&l2=1');        
+    }
+
+    #my $response = $ua->get( 'https://www.multitran.com/m.exe?s='.$message.'&l1=1&l2=2');
+    my $content  = $response->decoded_content();
+
+
+    $t->parse_content($content);
+
+    # class="mt-4 p-4 shadow-sm rounded"
+    #my $comments = $t->findvalue('//*[@width="100%"]');
+    my @subj = $t->findvalues('//*[@class="subj"]');
+    my @trans = $t->findvalues('//*[@class="trans"]');
+
+
+    #print(Dumper(@trans));
+
+    #my $mtran = {};
+    my @definition = ();
+    if ( scalar(@subj) == scalar(@trans) ) {
+        foreach my $dic ( keys @subj) {
+            #$mtran->{$subj[$dic]} = $trans[$dic];
+            my $def = $subj[$dic] . "   :   ". $trans[$dic];
+            push @definition, $def;
+            #warn ($subj[$dic] . "   :   ". $trans[$dic] . "\n");
+        }
+    #    print(Dumper( scalar(@trans)));
+    }
+    my $endstr = join('<br>', @definition);
+    requests::sender::message_send($peer_id,$endstr);
+
+    #warn(Dumper($mtran));
+}
+
+commands::commandHandler::createCommand("мтран", \&multitran);
+commands::commandHandler::createCommand("мультитран", \&multitran);
+commands::commandHandler::createCommand("м", \&multitran);
+commands::commandHandler::createCommand("multitran", \&multitran);
+commands::commandHandler::createCommand("m", \&multitran);
 
 commands::commandHandler::createCommand("няшка", \&nyaa);
 commands::commandHandler::createCommand("урбан", \&urban);
