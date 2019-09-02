@@ -90,19 +90,19 @@ sub nyaa {
 }
 
 sub multitran {
-    #my $response = $ua->get( 'https://www.multitran.com/m.exe?s=shovel&l1=1&l2=
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
     my $message = $_[0]->{'object'}->{'text'};
     $message =~ s/^\w+\s+\w+\s+//g;
 
+    warn ($message);
+
     my $response;
-    if ($message =~ m/[А-я \-_]+/gmu) {
+    if ($message =~ m/[А-я \-_ ]+/gmu) {
         $response = $ua->get( 'https://www.multitran.com/m.exe?s='.$message.'&l1=1&l2=2');
     } else {
         $response = $ua->get( 'https://www.multitran.com/m.exe?s='.$message.'&l1=2&l2=1');        
     }
 
-    #my $response = $ua->get( 'https://www.multitran.com/m.exe?s='.$message.'&l1=1&l2=2');
     my $content  = $response->decoded_content();
 
 
@@ -119,7 +119,8 @@ sub multitran {
     #my $mtran = {};
     my @definition = ();
     if ( scalar(@subj) == scalar(@trans) ) {
-        foreach my $dic ( keys @subj) {
+        for (my $dic = 0; $dic <= 7; $dic++) {
+        #foreach my $dic ( keys @subj) {
             #$mtran->{$subj[$dic]} = $trans[$dic];
             my $def = $subj[$dic] . "   :   ". $trans[$dic];
             push @definition, $def;
@@ -128,6 +129,7 @@ sub multitran {
     #    print(Dumper( scalar(@trans)));
     }
     my $endstr = join('<br>', @definition);
+    warn (Dumper($endstr));
     requests::sender::message_send($peer_id,$endstr);
 
     #warn(Dumper($mtran));
