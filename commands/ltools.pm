@@ -9,6 +9,7 @@ use JSON;
 use utf8;
 use LWP;
 use LWP::UserAgent; 
+use HTTP::Request;
 use HTML::TreeBuilder::XPath qw();
 
 use XML::Feed;
@@ -16,7 +17,6 @@ use URI::Encode qw(uri_encode uri_decode);
 
 
 my $ua      = LWP::UserAgent->new();
-my $t = HTML::TreeBuilder::XPath->new;
 
 sub urban {
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
@@ -89,25 +89,34 @@ sub nyaa {
     
 }
 
+sub sendreqtomtran {
+    #my $var;
+    #system("curl -s --location --request GET https://www.multitran.com/m.exe?s=shovel&l1=1&l2=2", $var);
+    my $dicua      = LWP::UserAgent->new();
+    $dicua->agent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36');
+    my $dicresp = $dicua->get( 'https://www.multitran.com/m.exe?s='.$_[0].'&l1=1&l2=2');
+    undef $dicua;
+    return $dicresp->decoded_content();
+    #return $var;
+}
 sub multitran {
+    
     my $peer_id = $_[0]->{'object'}->{'peer_id'};
     my $message = $_[0]->{'object'}->{'text'};
     $message =~ s/^\w+\s+\w+\s+//g;
 
     warn ($message);
 
-    my $response;
-    if ($message =~ m/[А-я \-_ ]+/gmu) {
-        $response = $ua->get( 'https://www.multitran.com/m.exe?s='.$message.'&l1=1&l2=2');
-    } else {
-        $response = $ua->get( 'https://www.multitran.com/m.exe?s='.$message.'&l1=2&l2=1');        
-    }
-
-    my $content  = $response->decoded_content();
-
-
+    my $output;
+    # if ($message =~ m/[А-я \-_ ]+/gmu) {
+        $output = sendreqtomtran($message);
+    # } else {
+    #     $output = sendreqtomtran($message);       
+    # }
+    my $content = $output;
+    my $t = HTML::TreeBuilder::XPath->new;
     $t->parse_content($content);
-
+    warn ($t);
     # class="mt-4 p-4 shadow-sm rounded"
     #my $comments = $t->findvalue('//*[@width="100%"]');
     my @subj = $t->findvalues('//*[@class="subj"]');
