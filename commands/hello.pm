@@ -421,7 +421,7 @@ sub executejs {
     #warn($message);
 
     #run ["firejail" ,"jslaunch", "--rlimit-as=1","--noprofile", $message ], "&>", \my $stdout;
-    run ["firejail", "--noprofile", "--quiet" ,"jslaunch", $message ], "&>", \my $stdout;
+    run ["firejail", "--noprofile", "--quiet", "timeout", "8s" ,"jslaunch", $message ], "&>", \my $stdout;
     my @values = split('\n', $stdout);
 
     #$stdout =~ s/\*\*.+//gmu;
