@@ -15,6 +15,7 @@ use requests::sender;
 use Data::Dumper;
 use utf8;
 use feature "switch";
+use IPC::Run 'run';
 
 my $config = config::configReader::loadConfig('.env');
 
@@ -413,6 +414,29 @@ sub weather{
     
 };
 
+sub executejs {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $message = $_[0]->{'object'}->{'text'};
+    $message =~ s/^\w+\s+\w+\s+//g;
+    #warn($message);
+
+    #run ["firejail" ,"jslaunch", "--rlimit-as=1","--noprofile", $message ], "&>", \my $stdout;
+    run ["firejail", "--noprofile", "--quiet" ,"jslaunch", $message ], "&>", \my $stdout;
+    my @values = split('\n', $stdout);
+
+    #$stdout =~ s/\*\*.+//gmu;
+    #warn($stdout);
+
+    #my $out = join('<br>', @values);
+    if (scalar(@values) >= 25) {
+        requests::sender::message_send($peer_id, "Ответ: слишком большой вывод.");
+        return;
+    }
+    warn(Dumper(@values) );
+    requests::sender::message_send($peer_id, "Ответ: " . $stdout);
+};
+
+commands::commandHandler::createCommand("жс", \&executejs);
 commands::commandHandler::createCommand("погода", \&weather);
 commands::commandHandler::createCommand("курс", \&crypto);
 commands::commandHandler::createCommand("крипта", \&crypto);

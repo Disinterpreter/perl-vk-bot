@@ -10,6 +10,7 @@ use lib './commands';
 use lib './requests';
 use commands::commandHandler;
 use commands::hello;
+use commands::nika;
 use commands::ltools;
 use commands::games;
 use requests::sender;
