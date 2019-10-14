@@ -436,6 +436,24 @@ sub executejs {
     requests::sender::message_send($peer_id, "Ответ: " . $stdout);
 };
 
+sub ksas {
+	my $peer_id = $_[0]->{'object'}->{'peer_id'};
+	my $message = $_[0]->{'object'}->{'text'};
+	$message =~ s/^\w+\s+\w+\s+//g;	
+
+	my @ksas_mems = (
+		'video187587341_456239017',
+		'photo187587341_457239023',
+		'photo187587341_457239024',
+		'photo187587341_457239025',
+		'photo187587341_457239026',
+		'photo187587341_457239027',
+		'photo187587341_457239028',
+		'video187587341_456239018'
+	);
+	my $ksas_id_mem = splice(@ksas, rand @ksas, 1);
+	requests::sender::message_send($peer_id,'',$ksas_id_mem);
+}
 commands::commandHandler::createCommand("жс", \&executejs);
 commands::commandHandler::createCommand("погода", \&weather);
 commands::commandHandler::createCommand("курс", \&crypto);
@@ -468,4 +486,5 @@ commands::commandHandler::createCommand("твит", \&twit);
 commands::commandHandler::createCommand("avx", \&avx);
 commands::commandHandler::createCommand("тяночку", \&tyan);
 commands::commandHandler::createCommand("кроба", \&krober);
+commands::commandHandler::createCommand("ксас", \&executejs);
 1;
