@@ -442,18 +442,11 @@ sub ksas {
 	$message =~ s/^\w+\s+\w+\s+//g;	
 
 	my @ksas_mems = (
-		'video187587341_456239017',
-		'photo187587341_457239023',
-		'photo187587341_457239024',
-		'photo187587341_457239025',
-		'photo187587341_457239026',
-		'photo187587341_457239027',
-		'photo187587341_457239028',
-		'video187587341_456239018'
+		-187587341
 	);
-	my $ksas_id_mem = splice(@ksas, rand @ksas, 1);
-	requests::sender::message_send($peer_id,'',$ksas_id_mem);
-}
+    my $post = requests::sender::wall_get(@ksas_mems);
+    requests::sender::message_send($peer_id,'', $post);
+};
 commands::commandHandler::createCommand("жс", \&executejs);
 commands::commandHandler::createCommand("погода", \&weather);
 commands::commandHandler::createCommand("курс", \&crypto);
