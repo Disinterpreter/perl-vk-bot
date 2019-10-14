@@ -486,5 +486,5 @@ commands::commandHandler::createCommand("твит", \&twit);
 commands::commandHandler::createCommand("avx", \&avx);
 commands::commandHandler::createCommand("тяночку", \&tyan);
 commands::commandHandler::createCommand("кроба", \&krober);
-commands::commandHandler::createCommand("ксас", \&executejs);
+commands::commandHandler::createCommand("ксас", \&ksas);
 1;
