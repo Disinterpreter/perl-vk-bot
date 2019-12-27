@@ -143,6 +143,31 @@ sub apex {
     requests::sender::message_send($peer_id,$decorate);
     warn ($username."::::".$kills);
 }
+
+sub generator {
+    my $ua      = LWP::UserAgent->new();
+    my $message = $_[0]->{'object'}->{'text'};
+    $message =~ s/^\w+\s+\w+\s+//g;
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    my $genurl = 'https://models.dobro.ai/gpt2/medium/';
+
+    my $prepjson = {
+        "prompt" => $message,
+        "length" => 30,
+        "num_samples" => 1
+    };
+    my $jstring = encode_json($prepjson);
+    warn ($jstring);
+
+    my $tmp_request = $ua->post( $genurl, Content => $jstring );
+    my $response = $tmp_request->decoded_content;
+    my $answ = decode_json($response);
+
+    requests::sender::message_send($peer_id,$message ." ".$answ->{replies}->[0]);
+
+
+}
+commands::commandHandler::createCommand("продолжи", \&generator);
 commands::commandHandler::createCommand("орех", \&apex);
 commands::commandHandler::createCommand("арех", \&apex);
 commands::commandHandler::createCommand("apex", \&apex);
