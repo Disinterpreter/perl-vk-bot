@@ -16,6 +16,7 @@ use Data::Dumper;
 use utf8;
 use feature "switch";
 use IPC::Run 'run';
+use HTML::TreeBuilder::XPath;
 
 my $config = config::configReader::loadConfig('.env');
 
@@ -447,6 +448,27 @@ sub ksas {
     my $post = requests::sender::wall_get(@ksas_mems);
     requests::sender::message_send($peer_id,'', $post);
 };
+
+sub reforged {
+	my $peer_id = $_[0]->{'object'}->{'peer_id'};
+	my $message = $_[0]->{'object'}->{'text'};
+	$message =~ s/^\w+\s+\w+\s+//g;	
+    my $browser = LWP::UserAgent->new;
+    my $tree= HTML::TreeBuilder::XPath->new;
+
+    my $response = $browser->get( 'https://www.metacritic.com/game/pc/warcraft-iii-reforged' );
+
+    my $content = $response->content;
+    $tree->parse_content($content);
+
+    my @subj = $tree->findvalues('//*[@class="metascore_w user large game negative"]');
+
+    my @opinion = $tree->findvalues('//*[@class="blurb blurb_expanded"]');
+    my $msg = "Ваш рефордж: ". $subj[0] . "<br>Мнение:<br>". @opinion[scalar(rand(int(@opinion)))];
+    requests::sender::message_send($peer_id,$msg);
+};
+
+commands::commandHandler::createCommand("рефордж", \&reforged);
 commands::commandHandler::createCommand("жс", \&executejs);
 commands::commandHandler::createCommand("погода", \&weather);
 commands::commandHandler::createCommand("курс", \&crypto);
