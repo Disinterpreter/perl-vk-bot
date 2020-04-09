@@ -468,6 +468,25 @@ sub reforged {
     requests::sender::message_send($peer_id,$msg);
 };
 
+sub party {
+    my @aparty = (
+        'Ты вступил в партию "Любителей пива"',
+        'Ты вступил в партию "Пидорасов"',
+        'Ты вступил в "ЛДПР"',
+        'Ты вступил в "Единную Россию"',
+        'Ты вступил в "КПРФ"',
+        'Ты вступил в "Яблоко"',
+        'Ты вступил "В Справедливую Россию"',
+        'Ты вступил "В Говно"',
+        'Ты вступил "В Парнас"'   
+    );
+
+    my $decidion = int(rand(scalar(@aparty)));
+
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    requests::sender::message_send($peer_id, $aparty[$decidion]);
+};
+
 commands::commandHandler::createCommand("рефордж", \&reforged);
 commands::commandHandler::createCommand("жс", \&executejs);
 commands::commandHandler::createCommand("погода", \&weather);
@@ -475,7 +494,6 @@ commands::commandHandler::createCommand("курс", \&crypto);
 commands::commandHandler::createCommand("крипта", \&crypto);
 commands::commandHandler::createCommand("действие", \&doing);
 commands::commandHandler::createCommand("шар", \&eightball);
-commands::commandHandler::createCommand("шар,", \&eightball);
 commands::commandHandler::createCommand("гороскоп", \&horoscope);
 commands::commandHandler::createCommand("химе", \&hime);
 commands::commandHandler::createCommand("меси", \&elizabeth);
@@ -502,4 +520,5 @@ commands::commandHandler::createCommand("avx", \&avx);
 commands::commandHandler::createCommand("тяночку", \&tyan);
 commands::commandHandler::createCommand("кроба", \&krober);
 commands::commandHandler::createCommand("ксас", \&ksas);
+commands::commandHandler::createCommand("вступить в партию", \&party);
 1;
