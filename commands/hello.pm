@@ -520,5 +520,5 @@ commands::commandHandler::createCommand("avx", \&avx);
 commands::commandHandler::createCommand("тяночку", \&tyan);
 commands::commandHandler::createCommand("кроба", \&krober);
 commands::commandHandler::createCommand("ксас", \&ksas);
-commands::commandHandler::createCommand("вступить в партию", \&party);
+commands::commandHandler::createCommand("вступить_в_партию", \&party);
 1;
