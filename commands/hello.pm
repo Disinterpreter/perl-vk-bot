@@ -372,9 +372,14 @@ sub crypto {
         my $carray = $jstring->{'data'};
         my @costarr = ();
         foreach my $cr (@$carray) {
-            #warn($cr->{'id'}." ".$cr->{'priceUsd'});
-            my $cnp = $cr->{'symbol'}." ".$cr->{'priceUsd'};
-            push @costarr, $cnp;
+            if ($cr->{'changePercent24Hr'} >= 0) {
+                my $cnp = $cr->{'symbol'}." ".sprintf("%.2f", $cr->{'priceUsd'}). " ⬆ на: ". sprintf("%.2f", $cr->{'changePercent24Hr'}) ."%";
+                push @costarr, $cnp;
+            } else {
+                my $cnp = $cr->{'symbol'}." ".sprintf("%.2f", $cr->{'priceUsd'}). " ⬇ на: ". sprintf("%.2f", $cr->{'changePercent24Hr'}) . "%";
+                push @costarr, $cnp;
+            }
+
         }
         my $total = join("<br>",@costarr);
         
