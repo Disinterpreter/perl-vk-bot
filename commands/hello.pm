@@ -251,6 +251,11 @@ sub bio {
     requests::sender::message_send($peer_id,'', 'video-55093819_456240747');
 }
 
+sub russia {
+    my $peer_id = $_[0]->{'object'}->{'peer_id'};
+    requests::sender::message_send($peer_id,'', 'video-60112307_456241895');
+}
+
 my @twit = (
 	-140336241
 );
@@ -526,4 +531,5 @@ commands::commandHandler::createCommand("тяночку", \&tyan);
 commands::commandHandler::createCommand("кроба", \&krober);
 commands::commandHandler::createCommand("ксас", \&ksas);
 commands::commandHandler::createCommand("вступить_в_партию", \&party);
+commands::commandHandler::createCommand("Россия", \&russia);
 1;
